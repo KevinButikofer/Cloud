@@ -7,7 +7,6 @@ from openstack import utils
 from getpass import getpass
 from base64 import b64encode
 
-
 def get_credentials(provider, filename):
     """
         The config file should have the follwing format
@@ -36,7 +35,6 @@ def create_connection(auth_url, access, password, region):
     access = access.split(":")
     return connection.Connection(**{'auth_url':auth_url, 'project_name':access[0], 'username':access[1], 'password':password, 'user_domain_name': 'default', 'project_domain_name': 'default', 'region_name': region})
 
-
 def delete_server(conn, srv):
     ''' to Compltete ...'''
     conn.compute.delete_server(srv)
@@ -46,7 +44,15 @@ def create_server(conn, name, img, flv, net, key, grp, userdata=""):
     # "openstack server  create --flavor" + flv + "--image" + img + "--key-name "+ key +
     # "--user-data " + userdata + "security-group " + grp + "--nic net-id= " + net + 
     # "--meta KEY= " + key
-    return conn.compute.create_server(name=name, image_id=img, flavor_id=flv, networks=[{"uuid": net}], key_name=key, user_data=b64encode(userdata))
+    img =  conn.compute.find_image(img)
+    flv = conn.compute.find_flavor(flv)
+    net = conn.network.find_network(net)
+    
+    if userdata != "":        
+        userdata = b64encode(userdata.encode())
+        return conn.compute.create_server(name=name, image_id=img.id, flavor_id=flv.id, networks=[{"uuid": net.id}], key_name=key, user_data=userdata)
+    else:
+        return conn.compute.create_server(name=name, image_id=img.id, flavor_id=flv.id, networks=[{"uuid": net.id}], key_name=key)
 
 
 def get_unused_floating_ip(conn, public_network='public'):
