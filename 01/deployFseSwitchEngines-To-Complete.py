@@ -49,8 +49,8 @@ def create_server(conn, name, img, flv, net, key, grp, userdata=""):
     net = conn.network.find_network(net)
     
     if userdata != "":        
-        userdata = b64encode(userdata.encode())
-        return conn.compute.create_server(name=name, image_id=img.id, flavor_id=flv.id, networks=[{"uuid": net.id}], key_name=key, user_data=userdata)
+        #userdata = b64encode(userdata.encode())
+        return conn.compute.create_server(name=name, image_id=img.id, flavor_id=flv.id, networks=[{"uuid": net.id}], key_name=key, userdata=userdata)
     else:
         return conn.compute.create_server(name=name, image_id=img.id, flavor_id=flv.id, networks=[{"uuid": net.id}], key_name=key)
 
@@ -63,7 +63,7 @@ def get_unused_floating_ip(conn, public_network='public'):
 
 def attach_floating_ip_to_instance(conn, instance, floating_ip):
     ''' to Compltete ...'''
-    conn.network.add_ip_to_port(instance, floating_ip)
+    conn.network.add_ip_to_port(instance.list_ports()[0], floating_ip)
 
 
 def main():
