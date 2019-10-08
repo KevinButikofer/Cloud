@@ -60,9 +60,8 @@ def create_server(conn, name, img, flv, net, key, grp, userdata=""):
     sgrp.append(conn.network.find_security_group('633de613-fc15-45ce-b8ca-1121cdf4a78a'))
 
     if userdata != "":
-        userdata = json.dumps(userdata)
         return conn.compute.create_server(name=name, image_id=img.id, flavor_id=flv.id, networks=[{"uuid": net.id}],
-                                          key_name=key,security_groups=sgrp, user_data=userdata)
+                                          key_name=key,security_groups=sgrp, userdata=userdata)
     else:
         return conn.compute.create_server(name=name, image_id=img.id, flavor_id=flv.id, networks=[{"uuid": net.id}],
                                           key_name=key, security_groups=sgrp)
