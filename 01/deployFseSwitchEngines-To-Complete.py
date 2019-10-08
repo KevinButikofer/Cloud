@@ -59,9 +59,9 @@ def create_server(conn, name, img, flv, net, key, grp, userdata=""):
     sgrp.append(conn.network.find_security_group('633de613-fc15-45ce-b8ca-1121cdf4a78a'))
 
     if userdata != "":
-        # userdata = b64encode(userdata.encode())
+        userdata = b64encode(userdata.encode())
         return conn.compute.create_server(name=name, image_id=img.id, flavor_id=flv.id, networks=[{"uuid": net.id}],
-                                          key_name=key,security_groups=sgrp, user_data=b64encode(userdata))
+                                          key_name=key,security_groups=sgrp, user_data=userdata)
     else:
         return conn.compute.create_server(name=name, image_id=img.id, flavor_id=flv.id, networks=[{"uuid": net.id}],
                                           key_name=key, security_groups=sgrp)
@@ -90,7 +90,7 @@ def get_unused_floating_ip(conn, public_network='public'):
 
 def attach_floating_ip_to_instance(conn, instance, floating_ip):
     ''' to Compltete ...'''
-    # need this pause, cant find the ports if not
+    # need this pause, cant find the ports if not pause
     time.sleep(30)
     print("end pause")
     for port in conn.network.ports():
@@ -119,6 +119,7 @@ def main():
 
     print("Creating MongoDB instance: ")
     mongo = create_server(conn, "mongo", MONGO_IMG, 'm1.small', network, keypair, secgrp)
+    # need this pause, if not cant find ip
     time.sleep(30)
     mongo = conn.get_server_by_id(mongo.id)  # refresh instance data
     MONGO_IP = mongo.private_v4
