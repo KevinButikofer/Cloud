@@ -7,6 +7,7 @@ from openstack import utils
 from getpass import getpass
 from base64 import b64encode
 import time
+import json
 
 
 def get_credentials(provider, filename):
@@ -59,7 +60,7 @@ def create_server(conn, name, img, flv, net, key, grp, userdata=""):
     sgrp.append(conn.network.find_security_group('633de613-fc15-45ce-b8ca-1121cdf4a78a'))
 
     if userdata != "":
-        userdata = b64encode(userdata.encode())
+        userdata = json.dumps(userdata)
         return conn.compute.create_server(name=name, image_id=img.id, flavor_id=flv.id, networks=[{"uuid": net.id}],
                                           key_name=key,security_groups=sgrp, user_data=userdata)
     else:
@@ -135,7 +136,7 @@ echo "DATABASE=%s" >> /home/ubuntu/FSEArchive/server/keys.env
 nohup /home/ubuntu/FSEArchive/node-v8.11.4-linux-x64/bin/node start.js > /dev/null &
 ''' % (SPOTIFY_ID, SPOTIFY_SECRET, EVENTFUL, DATABASE)
     print(userdata)
-    api = create_server(conn, 'backend', BACKEND_IMG, 'm1.small', network, keypair, secgrp, userdata.encode())
+    api = create_server(conn, 'backend', BACKEND_IMG, 'm1.small', network, keypair, secgrp, userdata)
     floating_ip = get_unused_floating_ip(conn)
     print("Backend IP:", floating_ip.floating_ip_address)
     attach_floating_ip_to_instance(conn, api, floating_ip)
@@ -148,7 +149,7 @@ echo "GMAP=%s" >> /home/ubuntu/FSEArchive/client/keys.env
 nohup /home/ubuntu/FSEArchive/node-v8.11.4-linux-x64/bin/node start.js --serverPublic=%s > /dev/null &
 ''' % (GMAP, "http://" + api.public_v4 + ":3000")
     print(userdata)
-    front = create_server(conn, 'frontend', FRONTEND_IMG, 'm1.small', network, keypair, secgrp, userdata.encode())
+    front = create_server(conn, 'frontend', FRONTEND_IMG, 'm1.small', network, keypair, secgrp, userdata)
     floating_ip = get_unused_floating_ip(conn)
     print("Frontend IP:", floating_ip.floating_ip_address)
     attach_floating_ip_to_instance(conn, front, floating_ip)
