@@ -29,8 +29,8 @@ def get_credentials(provider, filename):
 def create_connection():
    ''' to Compltete ...'''
    try:
-       ec2 = boto3.resource('ec2', 'us-east-1')
-       return ec2
+       conn = boto3.resource('ec2', 'eu-central-1a')
+       return conn
    except Exception as e:
         print(e)
 
@@ -42,23 +42,24 @@ def delete_server(conn, instance):
 
 def create_server(conn, ami_id, flv, key, grp, userdata=""):
     ''' to Compltete ...'''
-    pool = conn.run_instances(image_id=ami_id, instance_type=flv, security_groups=[grp],
-                       key_name=key, user_data=userdata)
-    instance = pool.instances[0]
+    return conn.create_instances(ImageId='<ami-image-id>', MinCount=1, MaxCount=1, InstanceType=flv, SecurityGroups=[grp], KeyName=key, UserData=userdata)
+    # pool = conn.run_instances(image_id=ami_id, instance_type=flv, security_groups=[grp],
+    #                    key_name=key, user_data=userdata)
+    # instance = pool.instances[0]
 
-    instance.update()
+    # instance.update()
 
-    return instance
+    # return instance
 
 def main():
     SPOTIFY_ID = "3d4a0a832445426aaa0a55dcf8658c55"
     SPOTIFY_SECRET = "9fb2f56364be46e398d0fa169bfb0605"
     EVENTFUL = "qT8gm8TtZS7HRtjm"
-    GMAP = "AIzaSyBFZXPlb0J5Zj_ENj0wqBanegGX4raSgOE"
+    GMAP = "AIzaSyApAmQIU7Hl4-W-gxbt_BxFJyicjxkUSa0"
 
-    MONGO_IMG = 'mongo_img'
-    BACKEND_IMG = 'backend_img'
-    FRONTEND_IMG = 'frontend_img'
+    MONGO_IMG = 'mongo_ok'
+    BACKEND_IMG = 'backend'
+    FRONTEND_IMG = 'frontend'
 
     print("Login phase...")
 

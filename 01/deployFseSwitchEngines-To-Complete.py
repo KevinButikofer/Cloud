@@ -73,7 +73,7 @@ def main():
     SPOTIFY_ID = "3d4a0a832445426aaa0a55dcf8658c55"
     SPOTIFY_SECRET = "9fb2f56364be46e398d0fa169bfb0605"
     EVENTFUL = "qT8gm8TtZS7HRtjm"
-    GMAP = "AIzaSyBFZXPlb0J5Zj_ENj0wqBanegGX4raSgOE"
+    GMAP = "AIzaSyApAmQIU7Hl4-W-gxbt_BxFJyicjxkUSa0"
 
     MONGO_IMG = 'mongo'
     BACKEND_IMG = 'backend'
