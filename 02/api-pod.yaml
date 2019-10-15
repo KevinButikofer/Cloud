@@ -15,7 +15,7 @@ spec:
       limits:
         cpu: 100m
     env:
-    - name: API_ENDPOINT
+    - name: REDIS_ENDPOINT
       value: redis-svc
-    - name: API_PWD
+    - name: REDIS_PWD
       value: ccp2
