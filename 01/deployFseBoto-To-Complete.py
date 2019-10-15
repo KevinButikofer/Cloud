@@ -36,9 +36,10 @@ def create_connection():
 
 
 def delete_server(conn, instance):
-    ''' to Compltete ...'''    
+    ''' to Compltete ...'''
     conn.instances.filter(InstanceIds=[instance.id]).stop()
     conn.instances.filter(InstanceIds=[instance.id]).terminate()
+
 
 def create_server(conn, ami_id, flv, key, grp, userdata=""):
     ''' to Compltete ...'''
@@ -50,6 +51,7 @@ def create_server(conn, ami_id, flv, key, grp, userdata=""):
     # instance.update()
 
     # return instance
+
 
 def main():
     SPOTIFY_ID = "3d4a0a832445426aaa0a55dcf8658c55"
@@ -75,14 +77,7 @@ def main():
 
     print("Create BackEnd instance: ")
 
-    userdata = '''#!/usr/bin/env bash
-cd /home/ubuntu/FSEArchive/server
-echo "SPOTIFY_ID=%s" >> /home/ubuntu/FSEArchive/server/keys.env
-echo "SPOTIFY_SECRET=%s" >> /home/ubuntu/FSEArchive/server/keys.env
-echo "EVENTFUL=%s" >> /home/ubuntu/FSEArchive/server/keys.env
-echo "DATABASE=%s" >> /home/ubuntu/FSEArchive/server/keys.env
-nohup /home/ubuntu/FSEArchive/node-v8.11.4-linux-x64/bin/node start.js > /dev/null &
-''' % (SPOTIFY_ID, SPOTIFY_SECRET, EVENTFUL, database)
+    userdata ='"#!/usr/bin/env bash \n cd /home/ubuntu/FSEArchive/server \n echo "SPOTIFY_ID=%s" >> /home/ubuntu/FSEArchive/server/keys.env \n echo "SPOTIFY_SECRET=%s" >> /home/ubuntu/FSEArchive/server/keys.env \n echo "EVENTFUL=%s" >> /home/ubuntu/FSEArchive/server/keys.env \n echo "DATABASE=%s" >> /home/ubuntu/FSEArchive/server/keys.env \n nohup /home/ubuntu/FSEArchive/node-v8.11.4-linux-x64/bin/node start.js > /dev/null & ' % (SPOTIFY_ID, SPOTIFY_SECRET, EVENTFUL, database)
 
     backend = create_server(conn, BACKEND_IMG, 't2.micro', keypair, secgrp, userdata)
 
